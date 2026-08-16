@@ -5,7 +5,7 @@ energy context: real residential tariffs, real market prices, Kyiv solar, and
 rolling blackouts.**
 
 Built on the measured building load profiles of [CityLearn 2022](https://github.com/intelligent-environments-lab/CityLearn)
-(17 residential buildings, 8760 hourly steps, 6.4 kWh battery + 5 kW inverter each),
+(Sierra Crest, Fontana, California — 17 zero-net-energy homes, 8760 hourly steps, 6.4 kWh battery + 5 kW inverter each),
 with every price- and energy-side signal replaced by Ukrainian data. Drop-in
 compatible with any code that runs CityLearn ≥ 2.1 — point `schema` at the dataset
 and your existing forecaster, MPC, or RL agent runs against Ukrainian conditions.
@@ -25,9 +25,9 @@ at midday when solar floods the grid, while the regulated tariff (amber) ignores
 | **Market prices** | [Market Operator](https://www.oree.com.ua) day-ahead market, full year 2024 | 8760 hourly prices, 0.01–9.00 UAH/kWh |
 | **PV generation** | [PVGIS](https://joint-research-centre.ec.europa.eu/photovoltaic-geographical-information-system-pvgis_en) SARAH2, Kyiv 2019 | 1157 kWh/kWp/yr, 4.5× winter dip |
 | **Blackouts** | stylised rolling-blackout schedule (4h off / 4h on, Nov–Mar) | plus a stochastic fault model |
-| Building load, weather, carbon | CityLearn 2022 (Texas) | unchanged — see Limitations |
+| Building load, weather, carbon | CityLearn 2022 (Fontana, California) | unchanged — see Limitations |
 
-![PV yield: Kyiv vs Texas](assets/pv_comparison.png)
+![PV yield: Kyiv vs California](assets/pv_comparison.png)
 
 ## Why this dataset exists
 
@@ -152,7 +152,7 @@ examples/quickstart.py        baseline vs. simple tariff-aware rule, plain CityL
 
 ## Limitations
 
-- **Building load profiles are Texas measurements** — consumption habits and the
+- **Building load profiles are Californian measurements** (Sierra Crest, Fontana) — consumption habits and the
   heating/cooling mix differ from Ukraine. Prices, solar, and blackouts are the
   Ukrainian components; load is not. No open hourly Ukrainian building dataset
   exists to replace it.

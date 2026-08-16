@@ -103,7 +103,7 @@ def tariff_profile() -> None:
 
 
 def pv_comparison() -> None:
-    """Kyiv (PVGIS) vs the source Texas profile, by month."""
+    """Kyiv (PVGIS) vs the source California profile, by month."""
     df = pd.read_csv(DATA / "Building_1.csv")
     kyiv = df.groupby("month").solar_generation.sum() / 1000
     from citylearn.data import DataSet
@@ -117,12 +117,12 @@ def pv_comparison() -> None:
     x = np.arange(12)
     fig, ax = plt.subplots(figsize=(9, 3.2))
     ax.bar(x - 0.2, [texas[m] for m in order], width=0.4, color=SLATE,
-           label=f"Texas, source dataset ({texas.sum():.0f} kWh/kWp/yr)")
+           label=f"California, source dataset ({texas.sum():.0f} kWh/kWp/yr)")
     ax.bar(x + 0.2, [kyiv[m] for m in order], width=0.4, color=AMBER,
            label=f"Kyiv, PVGIS 2019 ({kyiv.sum():.0f} kWh/kWp/yr)")
     ax.set_xticks(x, labels)
     ax.set_ylabel("kWh per kWp")
-    ax.set_title("PV yield: Kyiv vs. the source Texas profile",
+    ax.set_title("PV yield: Kyiv vs. the source California profile",
                  fontsize=13, loc="left", pad=10, color=INK, fontweight="bold")
     ax.legend(frameon=False, fontsize=9.5)
     _clean(ax)

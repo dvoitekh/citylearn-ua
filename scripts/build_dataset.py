@@ -11,8 +11,8 @@ adaptations:
 * **PV generation** (``--pv kyiv``, default) — the ``solar_generation`` column
   of every building is replaced with a real Kyiv year from PVGIS (SARAH2,
   2019, 1 kWp, 35 deg tilt, south, 14% system loss): ~1157 kWh/kWp/year
-  against ~1600 for the source Texas profile, with a 4.5x winter dip.
-  ``--pv texas`` keeps the original profile (climate as a free variable).
+  against ~1600 for the source California profile, with a 4.5x winter dip.
+  ``--pv texas`` keeps the original profile (climate as a free variable; the flag name is historical).
 * **Outages** (``--outages``, default ``none``) — see ``make_outage_schedules.py``.
 
 Alignment notes
