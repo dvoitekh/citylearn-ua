@@ -1,11 +1,11 @@
 cff-version: 1.2.0
 message: "If you use CityLearn-UA, please cite it as below (and cite CityLearn for the underlying profiles)."
-title: "CityLearn-UA: a CityLearn-compatible dataset for benchmarking building energy control under the Ukrainian residential electricity tariff"
+title: "CityLearn-UA: a CityLearn-compatible benchmark for building energy control in the Ukrainian energy context"
 authors:
   - family-names: Voitekh
     given-names: Dmytro
-version: 1.0.0
-date-released: 2026-08-15
+version: 2.0.0
+date-released: 2026-08-16
 license: MIT
 repository-code: "https://github.com/dvoitekh/citylearn-ua"
 keywords:
@@ -13,5 +13,8 @@ keywords:
   - building energy management
   - time-of-use tariff
   - Ukraine
+  - day-ahead market
+  - photovoltaics
+  - resilience
   - model predictive control
   - reinforcement learning
