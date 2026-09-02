@@ -135,7 +135,7 @@ def benchmark() -> None:
     rows = [
         ("No control", 1.000, 1.000),
         ("RBC — foreign-tariff rules", 0.993, 0.943),
-        ("RBC-UA — re-optimized rules", 0.970, 0.930),
+        ("RBC-UA — re-optimized rules", 0.970, 0.921),
         ("MPC — no re-tuning", 0.946, 0.915),
     ]
     labels = [r[0] for r in rows]

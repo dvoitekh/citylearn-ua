@@ -94,7 +94,7 @@ buildings, controllers from the companion DistrictEMS platform:
 |---|---|---|
 | No control | 1.000 | 1.000 |
 | RBC — hourly rules optimized for the source context | 0.993 | 0.943 |
-| RBC-UA — same rules re-optimized here (ES, ~200 evals) | 0.970 | 0.930 |
+| RBC-UA — same rules re-optimized here (ES, ~200 evals) | 0.970 | 0.921 |
 | **MPC — zero re-tuning, prices read as input** | **0.946** | **0.915** |
 
 In money, against no control: MPC saves 7.0% of the import bill under the
