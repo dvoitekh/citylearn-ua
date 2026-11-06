@@ -46,7 +46,8 @@ def _zones(ax):
 
 def _hour_index(df: pd.DataFrame) -> np.ndarray:
     """Map dataset rows to clock hours 0..23 (row 0 is hour 24 == 0)."""
-    return (df.index.to_numpy() % 24)
+    # Row t covers the clock hour starting at (t - 1) % 24 (row 0 = 23:00-24:00).
+    return (df.index.to_numpy() - 1) % 24
 
 
 def tariff_profile() -> None:
@@ -54,7 +55,7 @@ def tariff_profile() -> None:
     p3 = pd.read_csv(DATA / "pricing.csv")["electricity_pricing"].to_numpy()
     p2 = pd.read_csv(DATA / "pricing_two_zone.csv")["electricity_pricing"].to_numpy()
     dam = pd.read_csv(DATA / "pricing_dam.csv")["electricity_pricing"].to_numpy()
-    hidx = np.arange(len(p3)) % 24
+    hidx = (np.arange(len(p3)) - 1) % 24
     prof3 = np.append([p3[hidx == h][0] for h in range(24)], p3[hidx == 0][0])
     prof2 = np.append([p2[hidx == h][0] for h in range(24)], p2[hidx == 0][0])
     profd = np.append([dam[hidx == h].mean() for h in range(24)], dam[hidx == 0].mean())
@@ -134,9 +135,9 @@ def benchmark() -> None:
     """Weighted CityLearn score under both price signals (lower is better)."""
     rows = [
         ("No control", 1.000, 1.000),
-        ("RBC — foreign-tariff rules", 0.993, 0.943),
-        ("RBC-UA — re-optimized rules", 0.970, 0.921),
-        ("MPC — no re-tuning", 0.946, 0.915),
+        ("RBC — foreign-tariff rules", 0.984, 0.943),
+        ("RBC-UA — re-optimized rules", 0.957, 0.921),
+        ("MPC — no re-tuning, 10-seed mean", 0.946, 0.913),
     ]
     labels = [r[0] for r in rows]
     three = [r[1] for r in rows]
@@ -187,7 +188,7 @@ def outage_figure() -> None:
     _clean(ax1)
 
     names = ["No control", "MPC", "RBC-UA"]
-    vals = [0.869, 0.763, 0.702]
+    vals = [0.869, 0.769, 0.659]
     ax2.barh(np.arange(3), vals, height=0.55, color=[SLATE, BLUE, AMBER])
     for i, v in enumerate(vals):
         ax2.text(v + 0.01, i, f"{v:.3f}", va="center", fontsize=9.5, color=INK)

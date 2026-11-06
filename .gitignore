@@ -1,3 +1,5 @@
 __pycache__/
 .DS_Store
 data/citylearn_ua_outage/
+benchmark/_data/
+benchmark/results/_tmp_shifts/

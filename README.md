@@ -41,8 +41,8 @@ profiles with real, currently effective Ukrainian signals.
 
 ## Tariff and price variants
 
-Residential base price **4.32 UAH/kWh**; zone boundaries follow the official
-multi-zone metering rules.
+Residential fixed price **4.32 UAH/kWh** (in force until 30 April 2027); prices and zone
+boundaries follow Annex 3 of Cabinet of Ministers Resolution No. 483.
 
 | Variant | File | Night 23:00–07:00 | Peaks 08:00–11:00, 20:00–22:00 | Other hours |
 |---|---|---|---|---|
@@ -70,10 +70,10 @@ Expected output (no-control baseline vs. a simple hand-written three-zone rule,
 
 ```
                            import, kWh   cost, UAH
-no control                        1582        6082
-three-zone rule                   1694        5582
+no control                        1582        6239
+three-zone rule                   1698        5763
 
-savings: 500 UAH (8.2%) over 15 days, 5 buildings
+savings: 476 UAH (7.6%) over 15 days, 5 buildings
 ```
 
 Using the dataset from your own code is one line:
@@ -86,22 +86,24 @@ env = CityLearnEnv(schema="data/citylearn_ua/schema.json", central_agent=True)
 ## Benchmark results
 
 Weighted CityLearn score (lower is better, 1.0 = no control), 15 days × 5
-buildings, controllers from the companion DistrictEMS platform:
+buildings, summer window (1–15 August). MPC is the mean over ten fixed noise seeds.
+Everything below is reproduced by [`benchmark/`](benchmark/README.md):
 
 ![Benchmark results](assets/benchmark.png)
 
 | Controller | Three-zone tariff | Day-ahead market |
 |---|---|---|
 | No control | 1.000 | 1.000 |
-| RBC — hourly rules optimized for the source context | 0.993 | 0.943 |
-| RBC-UA — same rules re-optimized here (ES, ~200 evals) | 0.970 | 0.921 |
-| **MPC — zero re-tuning, prices read as input** | **0.946** | **0.915** |
+| RBC — hourly rules optimized for the source context | 0.984 | 0.943 |
+| RBC-UA — same rules re-optimized here (ES, 193 evals, seed 42) | 0.957 | 0.921 |
+| **MPC — zero re-tuning, prices read as input** | **0.946** | **0.913** |
 
-In money, against no control: MPC saves 7.0% of the import bill under the
-regulated tariff and 16.9% under market prices, and cuts peak-hour import by
-20.5% / 31.9%. Rule-based control recovers part of that only after being
-re-optimized for the new context — and its re-optimized schedule is then tied to
-that context again.
+In money on this window, against no control: MPC saves 7.4% of the import bill under the
+regulated tariff and 16.4% under market prices, and cuts expensive-hour import by
+15.1% / 31.2%. RBC-UA saves 7.3% and 17.9%. On the held-out windows under the regulated
+tariff the schedules save 1.0–1.2% (autumn) and lose 3.5–3.6% (winter), while MPC keeps
+5.8% and 2.3%. Under market prices the schedules and MPC save similar amounts there.
+In winter under the three-zone tariff the MPC score margin (0.997) lies within the seed spread.
 
 ## Resilience under blackouts
 
@@ -112,17 +114,18 @@ only; CityLearn reports the share of demand it could not serve.
 
 ![Blackout pattern and resilience](assets/outages.png)
 
-| Controller | Unserved energy | Mean SoC when the blackout starts |
-|---|---|---|
-| No control | 0.869 | 0.00 |
-| MPC (cost-optimal) | 0.763 | 0.14 |
-| **RBC-UA (fixed schedule)** | **0.702** | **0.21** |
+| Controller | Unserved energy, base schedule | Mean SoC when the blackout starts | Eight schedule shifts: range (mean) |
+|---|---|---|---|
+| No control | 0.869 | 0.00 | 0.816–0.906 (0.861) |
+| MPC (cost-optimal), 10 seeds | 0.769 | 0.14 | 0.734–0.833 (0.783) |
+| RBC | 0.642 | 0.24 | 0.597–0.867 (0.738) |
+| **RBC-UA (fixed schedule)** | 0.659 | 0.27 | 0.588–0.865 (**0.723**) |
 
 **The cost-optimal controller is not the resilience-optimal one.** MPC empties the
-battery whenever holding charge has no price value, so it enters blackouts with 35%
-less stored energy than the naive rule schedule and serves less load. Designing for
-both objectives at once — cost with a state-of-charge reserve — is the open problem
-this scenario exists to benchmark.
+battery whenever holding charge has no price value, and in seven of eight schedule
+shifts it leaves more demand unserved than the fixed schedule. The result rests on one
+winter window and depends on the schedule phase. Rolling-horizon control with a
+state-of-charge reserve is what this scenario exists to benchmark.
 
 ## Rebuilding from scratch
 
@@ -148,6 +151,7 @@ scripts/fetch_dam_prices.py   Market Operator hourly DAM price fetcher
 scripts/make_outage_schedules.py  blackout scenarios (deterministic + stochastic)
 scripts/make_figures.py       README figures
 examples/quickstart.py        baseline vs. simple tariff-aware rule, plain CityLearn
+benchmark/                    controllers, seeds, scripts and raw results of the reference experiments
 ```
 
 ## Limitations
@@ -179,6 +183,14 @@ project — please cite it alongside this dataset:
 
 Price data © [JSC "Market Operator"](https://www.oree.com.ua) (public reports);
 solar data from the European Commission's PVGIS.
+
+## Changes in v2.1.0
+
+v2.0.0 charged the two-zone and three-zone tariffs one hour too early against the PV and
+market series and the clock (row `t` covers the hour starting at `(t - 1) % 24`). v2.1.0
+fixes this; the day-ahead, PV, load and outage files are byte-identical. The reference
+results were recomputed with explicit seeds, and the RBC-UA schedule was re-tuned.
+All v2.0.0 scores are superseded.
 
 ## Citation
 

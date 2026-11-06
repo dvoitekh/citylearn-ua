@@ -1,0 +1,47 @@
+[
+ {
+  "controller": "sac",
+  "start_day": 0,
+  "steps": 0,
+  "score": 1.0041771704016178,
+  "cost_component": 0.9441773904937181,
+  "emissions": 1.0189410564182453,
+  "grid": 1.0494130642928903,
+  "ramping": 1.1198004194116884,
+  "load_factor": 0.9934658368394255,
+  "daily_peak": 1.0455402799639109,
+  "all_time_peak": 1.0388457209565367,
+  "seconds": 2.5023069381713867,
+  "window": "summer"
+ },
+ {
+  "controller": "sac",
+  "start_day": 60,
+  "steps": 0,
+  "score": 0.9281892677957441,
+  "cost_component": 0.8686288487569401,
+  "emissions": 0.9770697895945654,
+  "grid": 0.938869165035727,
+  "ramping": 1.0883065071803173,
+  "load_factor": 0.9573958266617577,
+  "daily_peak": 0.8657514149657741,
+  "all_time_peak": 0.8440229113350589,
+  "seconds": 2.4039759635925293,
+  "window": "autumn"
+ },
+ {
+  "controller": "sac",
+  "start_day": 150,
+  "steps": 0,
+  "score": 0.9904308550263773,
+  "cost_component": 0.9811049709126294,
+  "emissions": 1.003377406766484,
+  "grid": 0.9868101874000186,
+  "ramping": 1.0436198742254525,
+  "load_factor": 0.949350237387871,
+  "daily_peak": 0.9542706379867509,
+  "all_time_peak": 1.0,
+  "seconds": 2.3885748386383057,
+  "window": "winter"
+ }
+]

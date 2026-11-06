@@ -48,8 +48,9 @@ def run(controlled: bool) -> tuple[float, float]:
     done = False
     step = 0
     while not done:
-        # action computed at step t is applied by CityLearn during hour t+1
-        hour = (step + 1) % 24
+        # The action computed at step t lands on row t + 1, which covers the
+        # clock hour starting at t % 24 (row 0 is 23:00-24:00).
+        hour = step % 24
         a = rule_action(hour) if controlled else 0.0
         _, _, done, truncated, _ = env.step([[a] * N_BUILDINGS])
         done = done or truncated

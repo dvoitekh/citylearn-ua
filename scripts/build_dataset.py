@@ -6,12 +6,12 @@ adaptations:
 
 * **Pricing** — Ukrainian residential tariff, three variants:
   ``pricing.csv`` (three-zone, default), ``pricing_two_zone.csv``,
-  ``pricing_flat.csv``. Base price 4.32 UAH/kWh (in force until 2026-10-31);
+  ``pricing_flat.csv``. Base price 4.32 UAH/kWh (in force until 2027-04-30);
   night 23:00-07:00 x0.4, peaks 08:00-11:00 and 20:00-22:00 x1.5.
 * **PV generation** (``--pv kyiv``, default) — the ``solar_generation`` column
   of every building is replaced with a real Kyiv year from PVGIS (SARAH2,
   2019, 1 kWp, 35 deg tilt, south, 14% system loss): ~1157 kWh/kWp/year
-  against ~1600 for the source California profile, with a 4.5x winter dip.
+  against a mean of 1471 for the five reference buildings of the source dataset, with a 4.5x winter dip.
   ``--pv texas`` keeps the original profile (climate as a free variable; the flag name is historical).
 * **Outages** (``--outages``, default ``none``) — see ``make_outage_schedules.py``.
 
@@ -80,8 +80,10 @@ def flat(hour: int) -> float:
 
 
 def pricing_frame(price_fn, n: int) -> pd.DataFrame:
-    # Dataset row t corresponds to clock hour t % 24 (row 0 = hour 24 == 0)
-    prices = np.array([price_fn(t % 24) for t in range(n)])
+    # Dataset row t covers the clock interval ending at hour t % 24: row 0 is
+    # 23:00-24:00 (label 24), row 1 is 00:00-01:00 (label 1). Same alignment as
+    # the PVGIS and day-ahead series (DATASET_START_INDEX).
+    prices = np.array([price_fn((t - 1) % 24) for t in range(n)])
     return prices_to_frame(prices)
 
 
